@@ -1,3 +1,9 @@
+# UnitySailor
+
+This is an example of how the simulation can be controlled using ROS2. 
+
+
+// TODO: anleitung überarbeiten
 IN LOCAL CONSOLE:
 
 sudo docker build -t foxy -f Dockerfile .
