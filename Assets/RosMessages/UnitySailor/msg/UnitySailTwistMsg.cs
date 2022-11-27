@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using System.Text;
 using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 
-namespace RosMessageTypes.CustomStuff
+namespace RosMessageTypes.UnitySailor
 {
     [Serializable]
     public class UnitySailTwistMsg : Message
     {
-        public const string k_RosMessageName = "custom_stuff/UnitySailTwist";
+        public const string k_RosMessageName = "unity_sailor_msgs/UnitySailTwist";
         public override string RosMessageName => k_RosMessageName;
 
         public int twist;

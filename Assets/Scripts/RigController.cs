@@ -2,11 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Robotics.ROSTCPConnector;
-using RosSailTwist = RosMessageTypes.UnityRoboticsDemo.UnitySailTwistMsg;
+using RosSailTwist = RosMessageTypes.UnitySailor.UnitySailTwistMsg;
+using RosMessageTypes.UnitySailor;
+
 
 
 public class RigController : MonoBehaviour
 {
+    ROSConnection ros;
+    
     public GameObject mast;
     public GameObject rig;
     public float currentRot = 0;
@@ -15,10 +19,23 @@ public class RigController : MonoBehaviour
     private float rotSpeed = 50;
     private bool isRotating = false;
 
+
+    // stuff for publishing position
+    public string topicName = "pos_rot";
+    public GameObject hull;
+    // Publish the cube's position and rotation every N seconds
+    public float publishMessageFrequency = 0.5f;
+    // Used to determine how much time has elapsed since the last message was published
+    private float timeElapsed;
+
+
     // Start is called before the first frame update
     void Start()
     {
-        ROSConnection.GetOrCreateInstance().Subscribe<RosSailTwist>("twist", TwistChange);
+        ros = ROSConnection.GetOrCreateInstance();
+        ros.Subscribe<RosSailTwist>("twist", TwistChange);
+        ros.RegisterPublisher<PosRotMsg>(topicName);
+
     }
 
     void RotateRig(bool clockwise) {
@@ -53,6 +70,32 @@ public class RigController : MonoBehaviour
             } else {
                 isRotating = false;
             }
+        }
+
+        RosPublishPosition();
+    }
+
+    private void RosPublishPosition() {
+        timeElapsed += Time.deltaTime;
+
+        if (timeElapsed > publishMessageFrequency)
+        {
+            // cube.transform.rotation = Random.rotation;
+
+            PosRotMsg hullPos = new PosRotMsg(
+                hull.transform.position.x,
+                hull.transform.position.y,
+                hull.transform.position.z,
+                hull.transform.rotation.x,
+                hull.transform.rotation.y,
+                hull.transform.rotation.z,
+                hull.transform.rotation.w
+            );
+
+            // Finally send the message to server_endpoint.py running in ROS
+            ros.Publish(topicName, hullPos);
+
+            timeElapsed = 0;
         }
     }
 }

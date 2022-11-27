@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Robotics.ROSTCPConnector;
-using RosSailTwist = RosMessageTypes.UnityRoboticsDemo.UnitySailTwistMsg;
+using RosSailTwist = RosMessageTypes.UnitySailor.UnitySailTwistMsg;
 
 public class RosTest : MonoBehaviour
 {
