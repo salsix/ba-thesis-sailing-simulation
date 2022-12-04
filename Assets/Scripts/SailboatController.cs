@@ -68,10 +68,8 @@ public class SailboatController : MonoBehaviour
 
     // applies a force to the rudder to turn the boat depending on the forward speed
     void Turn(bool turnLeft) {
-        float turnSpeed = turnLeft ? -20000f : 20000f;
+        float turnSpeed = turnLeft ? -10000f : 10000f;
         rudderRB.AddForce(transform.up * turnSpeed);
-
-        // TODO add small backward force (drag) to the rudder to simulate the rudder being pushed back by the water
     }
 
     // returns the target speed by wind speed and angle from the polar chart IN UNITS/S

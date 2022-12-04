@@ -34,8 +34,6 @@ public class RigController : MonoBehaviour
     {
         ros = ROSConnection.GetOrCreateInstance();
         ros.Subscribe<RosSailTwist>("twist", TwistChange);
-        ros.RegisterPublisher<PosRotMsg>(topicName);
-
     }
 
     void RotateRig(bool clockwise) {
@@ -70,32 +68,6 @@ public class RigController : MonoBehaviour
             } else {
                 isRotating = false;
             }
-        }
-
-        RosPublishPosition();
-    }
-
-    private void RosPublishPosition() {
-        timeElapsed += Time.deltaTime;
-
-        if (timeElapsed > publishMessageFrequency)
-        {
-            // cube.transform.rotation = Random.rotation;
-
-            PosRotMsg hullPos = new PosRotMsg(
-                hull.transform.position.x,
-                hull.transform.position.y,
-                hull.transform.position.z,
-                hull.transform.rotation.x,
-                hull.transform.rotation.y,
-                hull.transform.rotation.z,
-                hull.transform.rotation.w
-            );
-
-            // Finally send the message to server_endpoint.py running in ROS
-            ros.Publish(topicName, hullPos);
-
-            timeElapsed = 0;
         }
     }
 }

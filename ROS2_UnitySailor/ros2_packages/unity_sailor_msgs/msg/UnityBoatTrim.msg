@@ -1,0 +1,2 @@
+float32 rig_rotation
+float32 rudder_rotation

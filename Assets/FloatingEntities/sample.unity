@@ -301,6 +301,11 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &257384942 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -1910202991015193646, guid: 1cdf7c565df78110a85274c7c02bcb68, type: 3}
+  m_PrefabInstance: {fileID: 1457953295}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &307439421
 GameObject:
   m_ObjectHideFlags: 0
@@ -777,6 +782,9 @@ MonoBehaviour:
   mast: {fileID: 2081809160}
   rig: {fileID: 549087512}
   currentRot: 0
+  topicName: pos_rot
+  hull: {fileID: 257384942}
+  publishMessageFrequency: 0.5
 --- !u!1 &564588019
 GameObject:
   m_ObjectHideFlags: 0
@@ -6140,6 +6148,9 @@ MonoBehaviour:
   mast: {fileID: 507711092}
   rig: {fileID: 1051563087}
   currentRot: 0
+  topicName: pos_rot
+  hull: {fileID: 0}
+  publishMessageFrequency: 0.5
 --- !u!1 &1178823076
 GameObject:
   m_ObjectHideFlags: 0

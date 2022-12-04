@@ -8,26 +8,26 @@ using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 namespace RosMessageTypes.UnitySailor
 {
     [Serializable]
-    public class UnitySailTwistMsg : Message
+    public class UnityRudderTwistMsg : Message
     {
-        public const string k_RosMessageName = "unity_sailor_msgs/UnitySailTwist";
+        public const string k_RosMessageName = "unity_sailor_msgs/UnityRudderTwist";
         public override string RosMessageName => k_RosMessageName;
 
-        public float twist;
+        public int twist;
 
-        public UnitySailTwistMsg()
+        public UnityRudderTwistMsg()
         {
-            this.twist = 0.0f;
+            this.twist = 0;
         }
 
-        public UnitySailTwistMsg(float twist)
+        public UnityRudderTwistMsg(int twist)
         {
             this.twist = twist;
         }
 
-        public static UnitySailTwistMsg Deserialize(MessageDeserializer deserializer) => new UnitySailTwistMsg(deserializer);
+        public static UnityRudderTwistMsg Deserialize(MessageDeserializer deserializer) => new UnityRudderTwistMsg(deserializer);
 
-        private UnitySailTwistMsg(MessageDeserializer deserializer)
+        private UnityRudderTwistMsg(MessageDeserializer deserializer)
         {
             deserializer.Read(out this.twist);
         }
@@ -39,7 +39,7 @@ namespace RosMessageTypes.UnitySailor
 
         public override string ToString()
         {
-            return "UnitySailTwistMsg: " +
+            return "UnityRudderTwistMsg: " +
             "\ntwist: " + twist.ToString();
         }
 

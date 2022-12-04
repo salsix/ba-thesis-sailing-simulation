@@ -5,7 +5,7 @@ using RosMessageTypes.UnitySailor;
 /// <summary>
 ///
 /// </summary>
-public class RosPositionPublisher : MonoBehaviour
+public class RosPublisher : MonoBehaviour
 {
     ROSConnection ros;
     public string topicName = "pos_rot";

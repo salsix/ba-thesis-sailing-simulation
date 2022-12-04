@@ -6,7 +6,9 @@ This is an example of how the simulation can be controlled using ROS2.
 // TODO: anleitung überarbeiten
 IN LOCAL CONSOLE:
 
+'''
 sudo docker build -t foxy -f Dockerfile .
+'''
 
 sudo docker run --name unity_sailor -it --rm -p 10000:10000 foxy /bin/bash
 sudo docker run --name unity_sailor -it --rm -p 10000:10000 -v $PWD/docker_shared:/home/dev_ws/shared foxy /bin/bash
