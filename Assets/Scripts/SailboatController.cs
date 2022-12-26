@@ -49,8 +49,8 @@ public class SailboatController : MonoBehaviour
     {
         if (Input.GetKeyDown("space")) driving = !driving;
 
-        if (Input.GetKey("left")) Turn(true);
-        if (Input.GetKey("right")) Turn(false);
+        // if (Input.GetKey("left")) Turn(true);
+        // if (Input.GetKey("right")) Turn(false);
     }
 
     void FixedUpdate() {

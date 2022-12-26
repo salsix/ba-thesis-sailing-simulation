@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Robotics.ROSTCPConnector;
-using RosSailTwist = RosMessageTypes.UnitySailor.UnitySailTwistMsg;
-using RosMessageTypes.UnitySailor;
+using AngleMessage = RosMessageTypes.UnitySailor.SetUnitySailAngleMsg;
 
 
 
@@ -13,52 +12,33 @@ public class RigController : MonoBehaviour
     
     public GameObject mast;
     public GameObject rig;
+
     public float currentRot = 0;
     private float goalRot = 0;
     private int rotDir;
     private float rotSpeed = 50;
-    private bool isRotating = false;
 
-
-    // stuff for publishing position
-    public string topicName = "pos_rot";
-    public GameObject hull;
-    // Publish the cube's position and rotation every N seconds
-    public float publishMessageFrequency = 0.5f;
-    // Used to determine how much time has elapsed since the last message was published
-    private float timeElapsed;
-
-
-    // Start is called before the first frame update
     void Start()
     {
         ros = ROSConnection.GetOrCreateInstance();
-        ros.Subscribe<RosSailTwist>("twist", TwistChange);
-    }
-
-    void RotateRig(bool clockwise) {
-        rotDir = clockwise ? 1 : -1;
-        isRotating = true;
-        goalRot += rotDir;
-    }
-
-    void TwistChange(RosSailTwist twistMessage) 
-    {
-        if (twistMessage.twist >= -90 && twistMessage.twist <= 90 && twistMessage.twist != goalRot) {
-            goalRot = twistMessage.twist;
-            rotDir = goalRot < currentRot ? -1 : 1;
-            isRotating = true;
-        }
+        ros.Subscribe<AngleMessage>("set_sail_angle", ROSrotateSail);
     }
 
     private void Update() {
-        // on A press, rotate rig counter clockwise
-        if (Input.GetKey("a")) RotateRig(false);
+        // Handle Rotation by A and D keys
+        if (Input.GetKey("a")) KeyboardRotateSail(1, 1);
+        if (Input.GetKey("d")) KeyboardRotateSail(1, -1);
+    }
 
-        // on D press, rotate rig clockwise
-        if (Input.GetKey("d")) RotateRig(true);
-    
-        if (isRotating) {
+    private void FixedUpdate() {
+        // Sail cannot rotate past 90 degrees in either direction
+        if (currentRot < -90) currentRot = -90;
+        if (currentRot > 90) currentRot = 90;
+        if (goalRot < -90) goalRot = -90;
+        if (goalRot > 90) goalRot = 90;
+
+        // Rotation Loop
+        if (rotDir != 0) {
             if (rotDir == 1 && currentRot < goalRot) {
                 rig.transform.RotateAround(mast.transform.position, mast.transform.up, rotSpeed * Time.deltaTime);
                 currentRot = currentRot + rotSpeed * Time.deltaTime;
@@ -66,8 +46,19 @@ public class RigController : MonoBehaviour
                 rig.transform.RotateAround(mast.transform.position, mast.transform.up, -rotSpeed * Time.deltaTime);
                 currentRot = currentRot - rotSpeed * Time.deltaTime;
             } else {
-                isRotating = false;
+                rotDir = 0;
             }
         }
+    }
+
+    void KeyboardRotateSail(float deltaAngle, int newRotDir) {
+        rotDir = newRotDir;
+        goalRot = currentRot + deltaAngle * rotDir;
+    }
+
+    void ROSrotateSail(AngleMessage msg) 
+    {
+        goalRot = msg.sail_angle;
+        rotDir = goalRot < currentRot ? -1 : 1;
     }
 }

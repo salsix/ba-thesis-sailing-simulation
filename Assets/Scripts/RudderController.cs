@@ -2,44 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Robotics.ROSTCPConnector;
-using RosRudderTwist = RosMessageTypes.UnitySailor.UnityRudderTwistMsg;
 using RosMessageTypes.UnitySailor;
+using AngleMessage = RosMessageTypes.UnitySailor.SetUnityRudderAngleMsg;
+
 
 public class RudderController : MonoBehaviour
 {
     ROSConnection ros;
 
-    public GameObject rudder;
+    public GameObject rudderVizualizer;
+    private Rigidbody rudderRB;
+
     public float currentRot = 0;
     private float goalRot = 0;
     private int rotDir;
     private float rotSpeed = 50;
 
-    private float publishMessageFrequency = 0.5f;
-    private float timeElapsed;
-
-    // Start is called before the first frame update
     void Start()
     {
         ros = ROSConnection.GetOrCreateInstance();
-        ros.Subscribe<RosRudderTwist>("rudder_twist", ROSrotateRudder);
+        ros.Subscribe<AngleMessage>("set_rudder_angle", ROSrotateRudder);
+
+        rudderRB = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        Debug.Log("currentRot: " + currentRot);
-        Debug.Log("goalRot: " + goalRot);
-
         // Handle Rotation by arrow keys
-        if (Input.GetKey("left")) ManualRotateRudder(1, -1);
-        if (Input.GetKey("right")) ManualRotateRudder(1, 1);
+        if (Input.GetKey("left")) KeyboardRotateRudder(1, -1);
+        if (Input.GetKey("right")) KeyboardRotateRudder(1, 1);
+    }
 
+    void FixedUpdate() {
         // Rudder cannot rotate past 90 degrees in either direction
-        if (currentRot < -45) currentRot = -45;
-        if (currentRot > 45) currentRot = 45;
-        if (goalRot < -45) goalRot = -45;
-        if (goalRot > 45) goalRot = 45;
+        if (currentRot < -90) currentRot = -90;
+        if (currentRot > 90) currentRot = 90;
+        if (goalRot < -90) goalRot = -90;
+        if (goalRot > 90) goalRot = 90;
 
         // Rotation Loop
         if (rotDir != 0) {
@@ -51,16 +50,33 @@ public class RudderController : MonoBehaviour
                 rotDir = 0;
             }
         }
+
+        // Rotate visible Rudder
+        rudderVizualizer.transform.localRotation = Quaternion.Euler(0, 0, -currentRot);
+
+        // Apply Rudder forces
+        ApplyRudderForce();
     }
 
-    void ManualRotateRudder(float deltaAngle, int newRotDir) {
+    void KeyboardRotateRudder(float deltaAngle, int newRotDir) {
         rotDir = newRotDir;
-        goalRot = currentRot + rotDir;
+        goalRot = currentRot + deltaAngle * rotDir;
     }
 
-    void ROSrotateRudder(RosRudderTwist twistMessage) 
+    void ROSrotateRudder(AngleMessage msg) 
     {
-        goalRot = twistMessage.twist;
+        goalRot = msg.rudder_angle;
         rotDir = goalRot < currentRot ? -1 : 1;
+    }
+
+    void ApplyRudderForce() {
+        // get absolute value of boat speed
+        float boatSpeed = Mathf.Abs(transform.InverseTransformDirection(rudderRB.velocity).x);
+
+        // Rudder force is dependent on boat speed and rudder rotation
+        float rudderForce = currentRot * boatSpeed * 2f;
+
+        // Apply force to Rudder
+        rudderRB.AddForce(transform.up * rudderForce);
     }
 }

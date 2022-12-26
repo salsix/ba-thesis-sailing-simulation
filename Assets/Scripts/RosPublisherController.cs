@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Robotics.ROSTCPConnector;
 using RosMessageTypes.UnitySailor;
-using UnityBoatTrim = RosMessageTypes.UnitySailor.UnityBoatTrimMsg;
+using UnityBoatSensors = RosMessageTypes.UnitySailor.UnityBoatSensorsMsg;
 using UnityBoatPosRot = RosMessageTypes.UnitySailor.UnityBoatPosRotMsg;
 
 public class RosPublisherController : MonoBehaviour
@@ -24,7 +24,7 @@ public class RosPublisherController : MonoBehaviour
     void Start()
     {
         ros = ROSConnection.GetOrCreateInstance();
-        ros.RegisterPublisher<UnityBoatTrim>("boat_trim");
+        ros.RegisterPublisher<UnityBoatSensors>("boat_sensors");
         ros.RegisterPublisher<UnityBoatPosRot>("boat_posrot");
         rudderRotation = rudder.GetComponent<RudderController>().currentRot;
         rigRotation = rig.GetComponent<RigController>().currentRot;
@@ -44,13 +44,13 @@ public class RosPublisherController : MonoBehaviour
 
     void PublishBoatTrim()
     {
-        var msg = new UnityBoatTrim
+        var msg = new UnityBoatSensors
         {
-            rudder_rotation = rudderRotation,
-            rig_rotation = rigRotation
+            boat_sail_angle = rudderRotation,
+            boat_rudder_angle = rigRotation
         };
 
-        ros.Publish("boat_trim", msg);
+        ros.Publish("boat_sensors", msg);
     }
 
     void PublishBoatPosition()

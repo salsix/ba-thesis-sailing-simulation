@@ -8,39 +8,39 @@ using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 namespace RosMessageTypes.UnitySailor
 {
     [Serializable]
-    public class UnityRudderTwistMsg : Message
+    public class SetUnitySailAngleMsg : Message
     {
-        public const string k_RosMessageName = "unity_sailor_msgs/UnityRudderTwist";
+        public const string k_RosMessageName = "unity_sailor_msgs/SetUnitySailAngle";
         public override string RosMessageName => k_RosMessageName;
 
-        public int twist;
+        public float sail_angle;
 
-        public UnityRudderTwistMsg()
+        public SetUnitySailAngleMsg()
         {
-            this.twist = 0;
+            this.sail_angle = 0.0f;
         }
 
-        public UnityRudderTwistMsg(int twist)
+        public SetUnitySailAngleMsg(float sail_angle)
         {
-            this.twist = twist;
+            this.sail_angle = sail_angle;
         }
 
-        public static UnityRudderTwistMsg Deserialize(MessageDeserializer deserializer) => new UnityRudderTwistMsg(deserializer);
+        public static SetUnitySailAngleMsg Deserialize(MessageDeserializer deserializer) => new SetUnitySailAngleMsg(deserializer);
 
-        private UnityRudderTwistMsg(MessageDeserializer deserializer)
+        private SetUnitySailAngleMsg(MessageDeserializer deserializer)
         {
-            deserializer.Read(out this.twist);
+            deserializer.Read(out this.sail_angle);
         }
 
         public override void SerializeTo(MessageSerializer serializer)
         {
-            serializer.Write(this.twist);
+            serializer.Write(this.sail_angle);
         }
 
         public override string ToString()
         {
-            return "UnityRudderTwistMsg: " +
-            "\ntwist: " + twist.ToString();
+            return "SetUnitySailAngleMsg: " +
+            "\nsail_angle: " + sail_angle.ToString();
         }
 
 #if UNITY_EDITOR
