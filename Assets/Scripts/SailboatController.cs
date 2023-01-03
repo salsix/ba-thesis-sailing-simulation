@@ -22,11 +22,14 @@ public class SailboatController : MonoBehaviour
     public GameObject rig;
     private RigController rigController;
 
+    public float forwardSpeed;
+    public float relativeWindDir;
+    public float absoluteWindSpeed;
+
     // wind angle and speed
     private float TWA;
     private float TWS;
-    private float AWA;
-    private float AWS;
+
 
     public Text dispTWS;
     public Text dispTWA;
@@ -48,9 +51,6 @@ public class SailboatController : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown("space")) driving = !driving;
-
-        // if (Input.GetKey("left")) Turn(true);
-        // if (Input.GetKey("right")) Turn(false);
     }
 
     void FixedUpdate() {
@@ -63,13 +63,9 @@ public class SailboatController : MonoBehaviour
             }
         }
 
-        UpdateDisplays();
-    }
+        forwardSpeed = -transform.InverseTransformDirection(boatRB.velocity).x;
 
-    // applies a force to the rudder to turn the boat depending on the forward speed
-    void Turn(bool turnLeft) {
-        float turnSpeed = turnLeft ? -10000f : 10000f;
-        rudderRB.AddForce(transform.up * turnSpeed);
+        UpdateDisplays();
     }
 
     // returns the target speed by wind speed and angle from the polar chart IN UNITS/S
@@ -125,10 +121,14 @@ public class SailboatController : MonoBehaviour
             targetAngle = 90;
         }
 
-        //TODO: optimize this
-
-        return 1 - Math.Abs(targetAngle - sailAngle)/targetAngle;
-
+        // if sail angle error > 45 deg, efficiency = 0
+        if (Math.Abs(targetAngle - sailAngle) > 45) {
+            return 0;
+        } 
+        // else, efficiency increases linearly with sail angle error from 1 at 0 deg error to 0 at 45 deg error
+        else {
+            return 1 - Math.Abs(targetAngle - sailAngle)/45;
+        }
     }
     
     // reads the polar chart csv and saves it to memory
@@ -155,6 +155,6 @@ public class SailboatController : MonoBehaviour
     void UpdateDisplays() {
         dispTWA.text = "<size=18>TWA</size>\n<b>" + Vector3.Angle(wind.transform.forward, transform.right).ToString("0.0") + "</b><size=12>deg</size>";
         dispTWS.text = "<size=18>TWS</size>\n<b>" + 12 + "</b><size=12>kn</size>";
-        dispSpeed.text = "<size=18>Speed</size>\n<b>" + (-transform.InverseTransformDirection(boatRB.velocity).x).ToString("0.0") + "</b><size=12>kn</size>";
+        dispSpeed.text = "<size=18>Speed</size>\n<b>" + forwardSpeed.ToString("0.0") + "</b><size=12>kn</size>";
     }
 }

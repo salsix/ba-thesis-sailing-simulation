@@ -12,9 +12,8 @@ public class RosPublisherController : MonoBehaviour
 
     public GameObject rudder;
     public GameObject rig;
-
-    private float rudderRotation;
-    private float rigRotation;
+    public GameObject boat;
+    public GameObject wind;
 
     private float publishMessageFrequency = 1f;
     private float timeElapsed = 0;
@@ -26,28 +25,39 @@ public class RosPublisherController : MonoBehaviour
         ros = ROSConnection.GetOrCreateInstance();
         ros.RegisterPublisher<UnityBoatSensors>("boat_sensors");
         ros.RegisterPublisher<UnityBoatPosRot>("boat_posrot");
-        rudderRotation = rudder.GetComponent<RudderController>().currentRot;
-        rigRotation = rig.GetComponent<RigController>().currentRot;
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         timeElapsed += Time.deltaTime;
         if (timeElapsed > publishMessageFrequency)
         {
             timeElapsed = 0;
-            PublishBoatTrim();
+            PublishBoatSensors();
             PublishBoatPosition();
         }
     }
 
-    void PublishBoatTrim()
+    void PublishBoatSensors()
     {
+        float sailAngle = rig.GetComponent<RigController>().currentRot;
+        float rudderAngle = rudder.GetComponent<RudderController>().currentRot;
+        float boatForwardSpeed = boat.GetComponent<SailboatController>().forwardSpeed;
+
+        float absWindAngle = wind.GetComponent<WindZone>().transform.rotation.eulerAngles.y;
+        float relWindAngle = absWindAngle - boat.transform.rotation.eulerAngles.y;
+
+        float absWindSpeed = wind.GetComponent<WindZone>().windMain;
+        float relWindSpeed = absWindSpeed * Mathf.Cos(relWindAngle * Mathf.Deg2Rad);
+
+
         var msg = new UnityBoatSensors
         {
-            boat_sail_angle = rudderRotation,
-            boat_rudder_angle = rigRotation
+            boat_sail_angle = sailAngle,
+            boat_rudder_angle = rudderAngle,
+            boat_forward_speed = boatForwardSpeed,
+            relative_wind_dir = 0,
+            absolute_wind_speed = 0,
         };
 
         ros.Publish("boat_sensors", msg);
