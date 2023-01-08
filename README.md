@@ -1,4 +1,4 @@
-# Sailing Simulation with ROS and Unity
+#  ROS-Controlled Sailing Simulation in Unity
 ### Bachelor Thesis
 
 Readme coming soon...
