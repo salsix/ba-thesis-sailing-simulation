@@ -9,7 +9,9 @@ find_package(std_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/UnityBoatPosRot.msg"
-  "msg/UnityBoatTrim.msg"
+  "msg/UnityBoatSensors.msg"
+  "msg/SetUnityRudderAngle.msg"
+  "msg/SetUnitySailAngle.msg"
   DEPENDENCIES builtin_interfaces geometry_msgs std_msgs
  )
 

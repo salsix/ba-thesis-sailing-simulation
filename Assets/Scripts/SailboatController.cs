@@ -9,12 +9,14 @@ using UnityEngine.UI;
 
 public class SailboatController : MonoBehaviour
 {
+    public string polarDataFileName = "polar-table-first235.csv";
+
     public GameObject rudder;
     private Rigidbody rudderRB;
-    private Rigidbody boatRB;
+    [HideInInspector] public Rigidbody boatRB;
     private bool driving;
 
-    public WindZone wind;
+    public GameObject wind;
     private float[] tblWindAngles;
     private int[] tblWindSpeeds;
     private float[][] lookupTable;
@@ -58,14 +60,14 @@ public class SailboatController : MonoBehaviour
         {
             TWA = Vector3.Angle(wind.transform.forward, transform.right);
 
-            if (-transform.InverseTransformDirection(boatRB.velocity).x <= GetTargetSpeed(12, TWA)) {
+            if (-transform.InverseTransformDirection(boatRB.velocity).x <= GetTargetSpeed(wind.GetComponent<WindZone>().windMain, TWA)) {
                 boatRB.AddForce(-transform.right * 50000f);
             }
         }
 
         forwardSpeed = -transform.InverseTransformDirection(boatRB.velocity).x;
 
-        UpdateDisplays();
+        // UpdateDisplays();
     }
 
     // returns the target speed by wind speed and angle from the polar chart IN UNITS/S
@@ -133,7 +135,7 @@ public class SailboatController : MonoBehaviour
     
     // reads the polar chart csv and saves it to memory
     void BuildPolarTable() {
-        string path = "/home/jonathan/Downloads/polar-table-first235.csv";
+        string path = "Assets/PolarData/" + polarDataFileName;
 
         string[] lines = System.IO.File.ReadAllLines(path);
 

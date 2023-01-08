@@ -218,7 +218,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &143605620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -301,11 +301,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1 &257384942 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -1910202991015193646, guid: 1cdf7c565df78110a85274c7c02bcb68, type: 3}
-  m_PrefabInstance: {fileID: 1457953295}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &307439421
 GameObject:
   m_ObjectHideFlags: 0
@@ -318,7 +313,7 @@ GameObject:
   - component: {fileID: 307439424}
   - component: {fileID: 307439423}
   m_Layer: 5
-  m_Name: TWS
+  m_Name: AWS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -376,7 +371,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.2
-  m_Text: '<size=18>TWS</size>
+  m_Text: '<size=18>AWS</size>
 
     <b>5.1</b><size=12>kn</size>'
 --- !u!222 &307439424
@@ -603,9 +598,6 @@ MonoBehaviour:
   mast: {fileID: 2081809160}
   rig: {fileID: 549087512}
   currentRot: 0
-  topicName: pos_rot
-  hull: {fileID: 257384942}
-  publishMessageFrequency: 0.5
 --- !u!1 &564588019
 GameObject:
   m_ObjectHideFlags: 0
@@ -633,7 +625,7 @@ WindZone:
   m_Enabled: 1
   m_Mode: 0
   m_Radius: 20
-  m_WindMain: 500
+  m_WindMain: 12
   m_WindTurbulence: 1
   m_WindPulseMagnitude: 0.5
   m_WindPulseFrequency: 0.01
@@ -823,7 +815,7 @@ GameObject:
   - component: {fileID: 919621888}
   - component: {fileID: 919621887}
   m_Layer: 5
-  m_Name: TWA
+  m_Name: AWA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6056,6 +6048,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rudder: {fileID: 916748861}
   rig: {fileID: 549087512}
+  boat: {fileID: 1899263218}
+  wind: {fileID: 564588019}
+  dispAWS: {fileID: 919621887}
+  dispAWA: {fileID: 307439423}
+  dispSpeed: {fileID: 884384597}
 --- !u!1 &1454572930
 GameObject:
   m_ObjectHideFlags: 0
@@ -6576,11 +6573,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rudder: {fileID: 916748861}
-  wind: {fileID: 564588020}
+  boatRB: {fileID: 0}
+  wind: {fileID: 564588019}
   rig: {fileID: 549087512}
-  dispTWS: {fileID: 307439423}
-  dispTWA: {fileID: 919621887}
-  dispSpeed: {fileID: 884384597}
+  forwardSpeed: 0
+  relativeWindDir: 0
+  absoluteWindSpeed: 0
+  dispTWS: {fileID: 0}
+  dispTWA: {fileID: 0}
+  dispSpeed: {fileID: 0}
 --- !u!1 &1994718964
 GameObject:
   m_ObjectHideFlags: 0
