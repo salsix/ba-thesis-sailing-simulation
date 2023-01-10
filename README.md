@@ -1,4 +1,4 @@
-# Sailing Simulation with ROS and Unity
+#  ROS-Controlled Sailing Simulation in Unity
 
 This project was created in the course of my Bachelor's Thesis with the title "Development of a ROS-Controlled Sailing Simulation in Unity - A Test Bed for Autonomous Sailing Systems" at the University of Technology Vienna. The abstract of the thesis can be found below.
 
