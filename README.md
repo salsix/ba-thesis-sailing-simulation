@@ -1,4 +1,9 @@
 # Sailing Simulation with ROS and Unity
-### Bachelor Thesis
 
-Readme coming soon...
+This project was created in the course of my Bachelor's Thesis with the title "Development of a ROS-Controlled Sailing Simulation in Unity - A Test Bed for Autonomous Sailing Systems" at the University of Technology Vienna. The abstract of the thesis can be found below.
+
+## Abstract
+> The main objective of this bachelor thesis is to present a sailing simulation developed in Unity that can be controlled via the Robot Operating System (ROS). This simulation serves as a test bed for autonomous sailing systems, enabling researchers to evaluate and compare different approaches in a controlled environment. By using a simulation, it is possible to study the behavior of autonomous sailing systems without the risks and logistical challenges associated with real-world testing. The ROS interface allows for simple integration into existing systems and an easy switch between the simulation and real hardware. The use of Unity as the development platform allows for easy customization and extension of the simulation.
+>
+> In addition to developing the sailing simulation, an important goal of this thesis is to evaluate the suitability of Unity as a platform for robotic simulation. This includes examining whether Unity works as expected, if it brings the anticipated advantages, and discussing the drawbacks in comparison to other solutions. This evaluation will be based on the performance, ease of use, and flexibility of Unity, as well as the availability of relevant resources and documentation. Additionally, this thesis will also provide an assessment of the physical accuracy of the simulation. It is important to note that while the simulation performed well, there are certain limitations regarding physical accuracy. Despite this, the simulation serves as a valuable tool for testing and evaluating autonomous sailing systems, and can be used as a starting point for further research and development in this field.
+

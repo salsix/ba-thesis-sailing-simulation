@@ -53,22 +53,31 @@ public class RosPublisherController : MonoBehaviour
     }
 
     void UpdateValues() {
-        forwardSpeed = boat.GetComponent<SailboatController>().forwardSpeed;
+        forwardSpeed = boat.GetComponent<SailboatController>().forwardSpeed / 0.51f; // convert to knots
 
-        trueWindDir = wind.GetComponent<WindZone>().transform.rotation.eulerAngles.y;
+        // get angle between wind and boat
+        trueWindDir = Vector3.Angle(wind.GetComponent<WindZone>().transform.rotation * Vector3.forward, boat.transform.right);
+
         trueWindSpeed = wind.GetComponent<WindZone>().windMain;
 
-        // headwind is the negative of the boat's velocity
-        var headWindVector = -boat.GetComponent<SailboatController>().boatRB.velocity;
+        Debug.Log("trueWindDir: " + trueWindDir);
+
+        // headwind is the negative of the boat's velocity, converted to knots
+        var headWindVector = -boat.GetComponent<SailboatController>().boatRB.velocity / 0.51f;
 
         // true wind vector is the windMain in the forward direction rotated by the windZone's rotation
-        var trueWindVector = wind.GetComponent<WindZone>().transform.rotation * Vector3.forward * wind.GetComponent<WindZone>().windMain;
+        var trueWindVector = wind.GetComponent<WindZone>().transform.rotation * wind.transform.forward * wind.GetComponent<WindZone>().windMain;
 
         // apparent wind vector is the sum of the headwind and truewind vectors
         var apparentWindVector = headWindVector + trueWindVector;
 
         apparentWindDir = Vector3.Angle(apparentWindVector, boat.transform.right);
         apparentWindSpeed = apparentWindVector.magnitude;
+
+        Debug.DrawLine(boat.transform.position - trueWindVector, boat.transform.position, Color.green);
+        Debug.DrawLine(boat.transform.position + headWindVector, boat.transform.position, Color.red);
+        Debug.DrawLine(boat.transform.position - apparentWindVector, boat.transform.position, Color.blue);
+        Debug.DrawLine(boat.transform.position - boat.transform.right * 10, boat.transform.position, Color.yellow);
 
         dispAWA.text = "<size=18>AWA</size>\n<b>" + apparentWindDir.ToString("0.0") + "</b><size=12>deg</size>";
         dispAWS.text = "<size=18>AWS</size>\n<b>" + apparentWindSpeed.ToString("0.0") + "</b><size=12>kn</size>";

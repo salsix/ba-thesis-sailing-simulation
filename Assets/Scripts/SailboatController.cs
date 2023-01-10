@@ -67,7 +67,7 @@ public class SailboatController : MonoBehaviour
 
         forwardSpeed = -transform.InverseTransformDirection(boatRB.velocity).x;
 
-        // UpdateDisplays();
+        Debug.Log("forwardSpeed: " + forwardSpeed);
     }
 
     // returns the target speed by wind speed and angle from the polar chart IN UNITS/S
@@ -99,9 +99,6 @@ public class SailboatController : MonoBehaviour
         } else {
             targetKn = lookupTable[windAngleIndex][windSpeedIndex];
         }
-
-        // reduce speed if sail position not optimal
-        Debug.Log(GetSailEfficiency());
 
         // convert knots to m/s: * 0.51
         return targetKn * 0.51f;
