@@ -32,11 +32,6 @@ public class SailboatController : MonoBehaviour
     private float TWA;
     private float TWS;
 
-
-    public Text dispTWS;
-    public Text dispTWA;
-    public Text dispSpeed;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -60,7 +55,7 @@ public class SailboatController : MonoBehaviour
         {
             TWA = Vector3.Angle(wind.transform.forward, transform.right);
 
-            if (-transform.InverseTransformDirection(boatRB.velocity).x <= GetTargetSpeed(wind.GetComponent<WindZone>().windMain, TWA)) {
+            if (-transform.InverseTransformDirection(boatRB.velocity).x <= GetSailEfficiency() * GetTargetSpeed(wind.GetComponent<WindZone>().windMain, TWA)) {
                 boatRB.AddForce(-transform.right * 50000f);
             }
         }
@@ -107,18 +102,19 @@ public class SailboatController : MonoBehaviour
     }
 
     float GetSailEfficiency() {
-        float sailAngle = rigController.currentRot;
+        float sailAngle = Math.Abs(rigController.currentRot);
 
-        float relWindAngle = TWA;
+        float windAngle = TWA;
         float targetAngle = 0;
 
-        if (relWindAngle <= 55) {
+        if (windAngle <= 55) {
             targetAngle = 15;
-        } else if (relWindAngle <= 150) {
-            targetAngle = 15f + (relWindAngle - 55f) * ((90f - 15f)/(150f - 55f));
+        } else if (windAngle <= 150) {
+            targetAngle = 15f + (windAngle - 55f) * ((90f - 15f)/(150f - 55f));
         } else {
             targetAngle = 90;
         }
+
 
         // if sail angle error > 45 deg, efficiency = 0
         if (Math.Abs(targetAngle - sailAngle) > 45) {
@@ -149,11 +145,5 @@ public class SailboatController : MonoBehaviour
 
             idx++;
         }
-    }
-
-    void UpdateDisplays() {
-        dispTWA.text = "<size=18>TWA</size>\n<b>" + Vector3.Angle(wind.transform.forward, transform.right).ToString("0.0") + "</b><size=12>deg</size>";
-        dispTWS.text = "<size=18>TWS</size>\n<b>" + 12 + "</b><size=12>kn</size>";
-        dispSpeed.text = "<size=18>Speed</size>\n<b>" + forwardSpeed.ToString("0.0") + "</b><size=12>kn</size>";
     }
 }
